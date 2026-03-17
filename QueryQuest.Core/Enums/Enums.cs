@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace QueryQuest.Core.Enums
+{
+    
+        public enum AnswerStatus 
+        {
+            Unanswered,
+            Correct,
+            Wrong
+        }
+        public enum TimerState
+        {
+            Good,
+            Warning,
+            Danger
+        }
+}

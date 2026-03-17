@@ -1,0 +1,15 @@
+C:\Users\TKick\Documents\System25\Arkitektur\QueryQuest.Infrastructure\bin\Release\net9.0\QueryQuest.Infrastructure.deps.json
+C:\Users\TKick\Documents\System25\Arkitektur\QueryQuest.Infrastructure\bin\Release\net9.0\QueryQuest.Infrastructure.dll
+C:\Users\TKick\Documents\System25\Arkitektur\QueryQuest.Infrastructure\bin\Release\net9.0\QueryQuest.Infrastructure.pdb
+C:\Users\TKick\Documents\System25\Arkitektur\QueryQuest.Infrastructure\bin\Release\net9.0\QueryQuest.Core.dll
+C:\Users\TKick\Documents\System25\Arkitektur\QueryQuest.Infrastructure\bin\Release\net9.0\QueryQuest.Core.pdb
+C:\Users\TKick\Documents\System25\Arkitektur\QueryQuest.Infrastructure\obj\Release\net9.0\QueryQuest.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\TKick\Documents\System25\Arkitektur\QueryQuest.Infrastructure\obj\Release\net9.0\QueryQuest.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\TKick\Documents\System25\Arkitektur\QueryQuest.Infrastructure\obj\Release\net9.0\QueryQuest.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\TKick\Documents\System25\Arkitektur\QueryQuest.Infrastructure\obj\Release\net9.0\QueryQuest.Infrastructure.AssemblyInfo.cs
+C:\Users\TKick\Documents\System25\Arkitektur\QueryQuest.Infrastructure\obj\Release\net9.0\QueryQuest.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\TKick\Documents\System25\Arkitektur\QueryQuest.Infrastructure\obj\Release\net9.0\QueryQue.CFCEB927.Up2Date
+C:\Users\TKick\Documents\System25\Arkitektur\QueryQuest.Infrastructure\obj\Release\net9.0\QueryQuest.Infrastructure.dll
+C:\Users\TKick\Documents\System25\Arkitektur\QueryQuest.Infrastructure\obj\Release\net9.0\refint\QueryQuest.Infrastructure.dll
+C:\Users\TKick\Documents\System25\Arkitektur\QueryQuest.Infrastructure\obj\Release\net9.0\QueryQuest.Infrastructure.pdb
+C:\Users\TKick\Documents\System25\Arkitektur\QueryQuest.Infrastructure\obj\Release\net9.0\ref\QueryQuest.Infrastructure.dll
