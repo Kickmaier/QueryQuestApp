@@ -17,7 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using QueryQuest.Core.Enums;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace QueryQuest.ViewModels
 {
@@ -33,14 +33,14 @@ namespace QueryQuest.ViewModels
         private IDispatcherTimer _timer;
         private double _totalTime = 100;
         private double _timeLeft;
-        private string _selectedAnswer;
+        //private string _selectedAnswer;
         public Question CurrentQuestion => _questionManager.CurrentQuestion;
         public List<AnswerOption> CurrentAnswers => _questionManager.CurrentQuestion?.AllAnswerOptions;
 
         public ICommand AnswerSelectedCommand { get; }
         public ICommand PlayAgainCommand { get; }
         public ICommand GoToMainPageCommand { get; }
-        public QuizViewModel (ITriviaService questionService, IGameSettingsService gameSettings, IScoreHandler scoreHandler, IQuestionService questionManager, QuizUIState quizUIState)
+        public QuizViewModel (ITriviaService questionService, IGameSettingsService gameSettings, IScoreHandler scoreHandler, IQuestionService questionManager, QuizUIState quizUIState, GameSettingsUI gameSettingsUI)
         {
             _gameSettings = gameSettings;
             _questionService = questionService;
@@ -51,9 +51,9 @@ namespace QueryQuest.ViewModels
             _timer.Interval = TimeSpan.FromMilliseconds(100);
             _timer.Tick += (s, e) => UpdateTimer();
 
-            AnswerSelectedCommand = new Command<AnswerOption>(OnAnswerSelected);
+            AnswerSelectedCommand = new Command<AnswerOptionUI>(OnAnswerSelected);
             PlayAgainCommand = new Command(async () => await ResetGame());
-            GoToMainPageCommand = new Command(async () => await Shell.Current.GoToAsync("//MainPage"));
+            GoToMainPageCommand = new Command(async () => await Shell.Current.GoToAsync($"//{nameof(MainPage)}"));
 
         }
         public event EventHandler TimeOutOccurred;
@@ -62,10 +62,8 @@ namespace QueryQuest.ViewModels
         {
             UI.QuizAreaVisible = true;
             UI.GameOverVisible = false;
-
             try
             {
-
                 var getQuestions = await _questionService.GetQuestionAsync(_gameSettings.Amount, _gameSettings.Difficulty, _gameSettings.CategoryId);
 
                 if (getQuestions != null && getQuestions.Count > 0)
@@ -102,6 +100,11 @@ namespace QueryQuest.ViewModels
                 if(_questionManager.HasMoreQuestions)
                 {
                     _questionManager.SetNextQuestion();
+                    UI.Answers.Clear();
+                    foreach (var answer in _questionManager.CurrentQuestion.AllAnswerOptions)
+                    {
+                        UI.Answers.Add(new AnswerOptionUI { Text = answer.Text, Status = AnswerStatus.Unanswered });
+                    }
                     OnPropertyChanged(nameof(CurrentQuestion));
                     OnPropertyChanged(nameof(CurrentAnswers));
                     UI.ProgressBarProgress = 0;
@@ -123,10 +126,9 @@ namespace QueryQuest.ViewModels
 
         public async Task ResetGame()
         {
-            _timer.Stop();
+            CleanUp();
 
             await LoadQuestionAsync();
-
         }
 
         private void UpdateTimer()
@@ -148,7 +150,7 @@ namespace QueryQuest.ViewModels
                 HandleTimeOut();
             }
         }
-        private async void OnAnswerSelected(AnswerOption selectedOption)
+        private async void OnAnswerSelected(AnswerOptionUI selectedOption)
         {
             if (IsInvalid(selectedOption)) return;
             try
@@ -165,15 +167,15 @@ namespace QueryQuest.ViewModels
                 Debug.WriteLine($"Fel i OnAnswerSelected: {ex.Message}");
             }
         }
-        private bool IsInvalid(AnswerOption selectedOption) => (selectedOption == null || UI.IsAnswerd);
+        private bool IsInvalid(AnswerOptionUI selectedOption) => (selectedOption == null || UI.IsAnswerd);
         private void PrepareCheck()
         {
             UI.IsAnswerd = true;
             _timer.Stop();
         }
-        private bool ScoreAndCorrect(AnswerOption selectedOption)
+        private bool ScoreAndCorrect(AnswerOptionUI selectedOption)
         {
-            bool isCorrect = _questionManager.CheckAnswer(selectedOption);
+            bool isCorrect = _questionManager.CheckAnswer(new AnswerOption { Text = selectedOption.Text });
             if (isCorrect)
             {
                 selectedOption.Status = AnswerStatus.Correct;
@@ -195,9 +197,9 @@ namespace QueryQuest.ViewModels
             UI.IsAnswerd = false;
             ShowNextQuestion();
         }
-        private void ShowAnswer(AnswerOption? selectedOption)
+        private void ShowAnswer(AnswerOptionUI? selectedOption)
         {
-            var correct = _questionManager.CurrentQuestion.AllAnswerOptions
+            var correct = UI.Answers
                     .FirstOrDefault(a => a.Text == _questionManager.CurrentCorrectAnswer);
             if (correct != null) correct.Status = AnswerStatus.Correct;
 
@@ -236,9 +238,9 @@ namespace QueryQuest.ViewModels
             _timer.Stop();
             _scoreHandeler.Reset();
             _questionManager.Reset();
-            UI.IsAnswerd = false;
-            UI.ProgressBarProgress = 0;
-            UI.TimerStatus = TimerState.Good;
+            UI.Reset();
+            OnPropertyChanged(nameof(_scoreHandeler));
+         
         }
     }
 }

@@ -44,5 +44,11 @@ namespace QueryQuest.ViewModels.Models
             _isAmountVisible = _isDifficultyVisible = _isCategoryVisible = false; 
             OnPropertyChanged(string.Empty);
         }
+        private GameSettingsUI _settings;
+        public GameSettingsUI Settings
+        {
+            get => _settings;
+            set { _settings = value; OnPropertyChanged(); }
+        }
     }
 }

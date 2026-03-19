@@ -34,6 +34,7 @@ namespace QueryQuest
             builder.Services.AddSingleton<BaseApiClient>();
             builder.Services.AddSingleton<HttpClient>();
             builder.Services.AddTransient<IQuestionService, QuestionManager>();
+            builder.Services.AddTransient<GameSettingsUI>();
             builder.Services.AddTransient<ScoreHandler>();
             builder.Services.AddTransient<QuizUIState>();
             builder.Services.AddTransient<MainUIState>();

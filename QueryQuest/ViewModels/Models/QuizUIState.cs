@@ -5,24 +5,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace QueryQuest.ViewModels.Models
 {
+
     public class QuizUIState : ObservableObject
     {
+        public ObservableCollection<AnswerOptionUI> Answers { get; } = new();
         public bool IsScoreVisible => _statusHeader == null;
+
         private bool _quiAreaVisible = true;
         public bool QuizAreaVisible
         {
             get { return _quiAreaVisible; }
             set { _quiAreaVisible = value; OnPropertyChanged(); }
         }
+
         private bool _gameOverVisible = false;
         public bool GameOverVisible
         {
             get { return _gameOverVisible; }
             set { _gameOverVisible = value; OnPropertyChanged(); }
         }
+
         private string _statusHeader;
         public string StatusHeader
         {
@@ -36,33 +42,35 @@ namespace QueryQuest.ViewModels.Models
             get => _statusBody;
             set { _statusBody = value; OnPropertyChanged(); }
         }
+
         private string _statusScore;
         public string StatusScore
         {
             get => _statusScore;
             set { _statusScore = value; OnPropertyChanged(); }
         }
+
         private string _retryButtonText;
         public string RetryButtonText
         {
             get => _retryButtonText;
             set { _retryButtonText = value; OnPropertyChanged(); }
         }
-        
+
         private string _questionCounterText;
         public string QuestionCounterText
         {
             get => _questionCounterText;
             set { _questionCounterText = value; OnPropertyChanged(); }
         }
-        
+
         private double _progressBarProgress = 1.0;
         public double ProgressBarProgress
         {
             get => _progressBarProgress;
             set { _progressBarProgress = value; OnPropertyChanged(); }
         }
-        
+
         private TimerState _timerStatus = TimerState.Good;
         public TimerState TimerStatus
         {
@@ -84,6 +92,24 @@ namespace QueryQuest.ViewModels.Models
             set { _isAnswerd = value; OnPropertyChanged(); }
         }
 
-
+        public void Reset()
+        {
+            Answers.Clear();
+            IsAnswerd = false;
+            ProgressBarProgress = 0;
+            TimerStatus = TimerState.Good;
+        }
     }
+    public class AnswerOptionUI : ObservableObject
+    {
+        public string Text { get; init; }
+
+        private AnswerStatus _status = AnswerStatus.Unanswered;
+        public AnswerStatus Status
+        {
+            get => _status;
+            set { _status = value; OnPropertyChanged(); }
+        }
+    }
+
 }

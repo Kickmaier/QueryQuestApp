@@ -12,100 +12,52 @@ using QueryQuest.Application.Interfaces;
 using QueryQuest.Core.Interfaces;
 using QueryQuest.Core.Models;
 using QueryQuest.ViewModels.Models;
+using QueryQuest.Views;
 
 namespace QueryQuest.ViewModels
 {
     public class MainViewModel : ObservableObject
     {
         private readonly IGameSettingsService _gameSettings;
-        private readonly ITriviaService _questionService;
+        public ICommand StartGameCommand { get; }
         public MainUIState UI { get; }
-        public MainViewModel(IGameSettingsService gameSettings, ITriviaService questionService, MainUIState mainUIState)
+        public MainViewModel(IGameSettingsService gameSettings, MainUIState mainUIState, GameSettingsUI gameSettingsUI)
         {
             _gameSettings = gameSettings;
-            _questionService = questionService;
             UI = mainUIState;
-            _gameSettings.PropertyChanged += async (s, e) =>
-            {
-                if (e.PropertyName == nameof(_gameSettings.CategoryId))
-                {
-                    _gameSettings.Amount = "10";
-                    _gameSettings.Difficulty = "";
-                }
-                if (e.PropertyName == nameof(_gameSettings.CategoryId) ||
-                    e.PropertyName == nameof(_gameSettings.Amount) ||
-                    e.PropertyName == nameof(_gameSettings.Difficulty))
-                {
-                    OnPropertyChanged(string.Empty);
-                    await UpdateDifficultyAvailabilityAsync();
-                }
-            };
+            UI.Settings = gameSettingsUI;
+            StartGameCommand = new Command(async () => await StartGame());
         }
 
-        private bool _canSelectEasy = true;
-        public bool CanSelectEasy
-        {
-            get => _canSelectEasy;
-            set { _canSelectEasy = value; OnPropertyChanged(); }
-        }
 
-        private bool _canSelectMedium = true;
-        public bool CanSelectMedium
-        {
-            get => _canSelectMedium;
-            set { _canSelectMedium = value; OnPropertyChanged(); }
-        }
+        public string Amount => UI.Settings.Amount;
+        public string Difficulty => UI.Settings.Difficulty;
+        public string CategoryId => UI.Settings.CategoryId;
 
-        private bool _canSelectHard = true;
-        public bool CanSelectHard
-        {
-            get => _canSelectHard;
-            set { _canSelectHard = value; OnPropertyChanged(); }
-        }
-        public string Amount => _gameSettings.Amount;
-        public string Difficulty => _gameSettings.Difficulty;
-        public string CategoryId => _gameSettings.CategoryId;
-
-        public string AmountLabelText => $"Längd: {_gameSettings.AmountDisplay}";
-        public string DifficultyLabelText => $"Svårighetsgrad: {_gameSettings.DifficultyDisplay}";
-        public string CategoryLabelText => $"Kategori: {_gameSettings.CategoryIdDisplay}";
-        public bool IsAmountError => _gameSettings.AmountDisplay == _gameSettings.AmountError;
-        public bool IsDifficultyError => _gameSettings.DifficultyDisplay == _gameSettings.DifficultyError;
-        public bool IsCategoryError => _gameSettings.CategoryIdDisplay == _gameSettings.UnknownCategory;
+        public string AmountLabelText => $"Längd: {UI.Settings.AmountDisplay}";
+        public string DifficultyLabelText => $"Svårighetsgrad: {UI.Settings.DifficultyDisplay}";
+        public string CategoryLabelText => $"Kategori: {UI.Settings.CategoryDisplay}";
+        public bool IsAmountError => _gameSettings.GetAmountDisplay(UI.Settings.Amount) == null;
+        public bool IsDifficultyError => _gameSettings.GetDifficultyDisplay(UI.Settings.Difficulty) == null;
+        public bool IsCategoryError => _gameSettings.GetCategoryIdDisplay(UI.Settings.CategoryId) == null;
         public bool CanStartGame => !IsAmountError && !IsDifficultyError && !IsCategoryError;
 
-        private async Task UpdateDifficultyAvailabilityAsync()
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(_gameSettings.CategoryId))
-                {
-                    CanSelectEasy = CanSelectMedium = CanSelectHard = true;
-                    return;
-                }
-
-                int catId = int.Parse(_gameSettings.CategoryId);
-                var response = await _questionService.GetCategoryStatsAsync(catId);
-
-                int required = int.Parse(_gameSettings.Amount);
-
-                CanSelectEasy = response.EasyCount >= required;
-                CanSelectMedium = response.MediumCount >= required;
-                CanSelectHard = response.HardCount >= required;
-            }
-            catch(Exception ex)
-            {
-                CanSelectEasy = CanSelectMedium = CanSelectHard = true;
-                System.Diagnostics.Debug.WriteLine($"Statistik-fel: {ex.Message}");
-            }
-        }
-
-        public void SetAmount(string value) { _gameSettings.Amount = value; UI.IsAmountVisible = false; }
+        public void SetAmount(string value) { UI.Settings.Amount = value; UI.IsAmountVisible = false; OnPropertyChanged(nameof(AmountLabelText)); }
         
-        public void SetDifficulty(string value) { _gameSettings.Difficulty = value; UI.IsDifficultyVisible = false; }
+        public void SetDifficulty(string value) { UI.Settings.Difficulty = value; UI.IsDifficultyVisible = false; OnPropertyChanged(nameof(DifficultyLabelText)); }
         
-        public void SetCategory(string value) { _gameSettings.CategoryId = value; UI.IsCategoryVisible = false; }
+        public void SetCategory(string value) { UI.Settings.CategoryId = value; UI.IsCategoryVisible = false; OnPropertyChanged(nameof(CategoryLabelText)); }
 
         public void ToggleMenu() => UI.IsMenuVisible = !UI.IsMenuVisible;
+        public void UppdateAll()
+        {
+            OnPropertyChanged(string.Empty);
+        }
+        public async Task StartGame()
+        {
+            UI.Settings.SyncToService();
+            await Shell.Current.GoToAsync($"//{nameof(QuizPage)}");
+        }
     }
+
 }

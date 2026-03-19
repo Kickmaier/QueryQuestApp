@@ -69,7 +69,7 @@
             <Button 
                 IsEnabled="{Binding CanStartGame}"
                 Text="Starta Quiz"
-                Clicked="OnGetQuestionClicked"
+                Command="{Binding StartGameCommand}"
                 CornerRadius="15" />
         </VerticalStackLayout>
     </ScrollView>
@@ -184,21 +184,21 @@
                             </DataTrigger>
                         </Button.Triggers>
                         </Button>
-                        <Button Text="Lätt" IsEnabled="{Binding CanSelectEasy}" Clicked="SetDifficulty" CommandParameter="easy" CornerRadius="15">
+                        <Button Text="Lätt" IsEnabled="{Binding UI.Settings.CanSelectEasy}" Clicked="SetDifficulty" CommandParameter="easy" CornerRadius="15">
                             <Button.Triggers>
                                 <DataTrigger TargetType="Button" Binding="{Binding Difficulty}" Value="easy">
                                     <Setter Property="BackgroundColor" Value="Green"/>
                                 </DataTrigger>
                             </Button.Triggers>
                         </Button>
-                        <Button Text="Medel" IsEnabled="{Binding CanSelectMedium}" Clicked="SetDifficulty" CommandParameter="medium" CornerRadius="15">
+                        <Button Text="Medel" IsEnabled="{Binding UI.Settings.CanSelectMedium}" Clicked="SetDifficulty" CommandParameter="medium" CornerRadius="15">
                             <Button.Triggers>
                                 <DataTrigger TargetType="Button" Binding="{Binding Difficulty}" Value="medium">
                                     <Setter Property="BackgroundColor" Value="Green"/>
                                 </DataTrigger>
                             </Button.Triggers>
                         </Button>
-                        <Button Text="Svårt" IsEnabled="{Binding CanSelectHard} " Clicked="SetDifficulty" CommandParameter="hard" CornerRadius="15">
+                        <Button Text="Svårt" IsEnabled="{Binding UI.Settings.CanSelectHard} " Clicked="SetDifficulty" CommandParameter="hard" CornerRadius="15">
                             <Button.Triggers>
                                 <DataTrigger TargetType="Button" Binding="{Binding Difficulty}" Value="hard">
                                     <Setter Property="BackgroundColor" Value="Green"/>

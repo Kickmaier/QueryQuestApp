@@ -23,18 +23,22 @@ public partial class MainPage : ContentPage
         };
     }
 
-    private async void OnGetQuestionClicked(object sender, EventArgs e)
-    {
-        if (_mainViewModel.CanStartGame)
-        {
-            await Shell.Current.GoToAsync($"//{nameof(QuizPage)}");
-        }
-    }
     private void OnToggleMenu(object sender, EventArgs e) => _mainViewModel.ToggleMenu();
-    private void SetAmount(object sender, EventArgs e) => _mainViewModel.SetAmount(GetSender(sender));
-    private void SetDifficulty(object sender, EventArgs e) => _mainViewModel.SetDifficulty(GetSender(sender));
-    private void SetCategory(object sender, EventArgs e) => _mainViewModel.SetCategory(GetSender(sender));
-
+    private void SetAmount(object sender, EventArgs e) 
+    {
+        _mainViewModel.SetAmount(GetSender(sender));
+        _mainViewModel.UppdateAll();
+    }
+    private void SetDifficulty(object sender, EventArgs e)
+    {
+        _mainViewModel.SetDifficulty(GetSender(sender));
+        _mainViewModel.UppdateAll();
+    }
+    private void SetCategory(object sender, EventArgs e)
+    {
+        _mainViewModel.SetCategory(GetSender(sender));
+        _mainViewModel.UppdateAll();
+    }
     private void ToggleAmountSelection(object sender, EventArgs e) => _mainViewModel.UI.IsAmountVisible = !_mainViewModel.UI.IsAmountVisible;
     private void ToggleDifficultySelection(object sender, EventArgs e) => _mainViewModel.UI.IsDifficultyVisible = !_mainViewModel.UI.IsDifficultyVisible;
     private void ToggleCategorySelection(object sender, EventArgs e) => _mainViewModel.UI.IsCategoryVisible = !_mainViewModel.UI.IsCategoryVisible;
