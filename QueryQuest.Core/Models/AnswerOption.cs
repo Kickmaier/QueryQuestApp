@@ -10,16 +10,9 @@ using System.Threading.Tasks;
 
 namespace QueryQuest.Core.Models
 {
-    public class AnswerOption : ObservableObject
+    public class AnswerOption
     {
         public string Text { get; set; }
-
-    private AnswerStatus _status = AnswerStatus.Unanswered;
-        public AnswerStatus Status
-        {
-            get => _status;
-            set { _status = value; OnPropertyChanged(); }
-        }
     }
 }
 

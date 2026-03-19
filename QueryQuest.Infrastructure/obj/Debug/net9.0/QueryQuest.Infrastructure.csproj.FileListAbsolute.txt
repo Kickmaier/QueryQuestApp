@@ -28,3 +28,4 @@ C:\Users\TKick\Documents\System25\Arkitektur\QueryQuestApp\QueryQuest.Infrastruc
 C:\Users\TKick\Documents\System25\Arkitektur\QueryQuestApp\QueryQuest.Infrastructure\obj\Debug\net9.0\refint\QueryQuest.Infrastructure.dll
 C:\Users\TKick\Documents\System25\Arkitektur\QueryQuestApp\QueryQuest.Infrastructure\obj\Debug\net9.0\QueryQuest.Infrastructure.pdb
 C:\Users\TKick\Documents\System25\Arkitektur\QueryQuestApp\QueryQuest.Infrastructure\obj\Debug\net9.0\ref\QueryQuest.Infrastructure.dll
+C:\Users\TKick\Documents\System25\Arkitektur\QueryQuestApp\QueryQuest.Infrastructure\obj\Debug\net9.0\QueryQuest.Infrastructure.sourcelink.json

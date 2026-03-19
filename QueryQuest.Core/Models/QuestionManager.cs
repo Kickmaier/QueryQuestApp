@@ -73,7 +73,7 @@ namespace QueryQuest.Core.Models
                     .OrderBy(a => Guid.NewGuid()).ToList();
 
                 q.AllAnswerOptions = allAnswers
-                        .Select(a => new AnswerOption { Text = a, Status = AnswerStatus.Unanswered })
+                        .Select(a => new AnswerOption { Text = a })
                         .ToList();
                 Questions.Add(q);
             }
@@ -86,4 +86,5 @@ namespace QueryQuest.Core.Models
         }
         public bool HasMoreQuestions => CurrentQuestionIndex < Questions.Count;
     }
+
 }
