@@ -1,10 +1,5 @@
 ﻿using QueryQuest.ViewModels;
 using QueryQuest.ViewModels.Models;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Text.Json;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace QueryQuest.Views;
 
@@ -23,27 +18,9 @@ public partial class MainPage : ContentPage
         };
     }
 
-    private void OnToggleMenu(object sender, EventArgs e) => _mainViewModel.ToggleMenu();
-    private void SetAmount(object sender, EventArgs e) 
-    {
-        _mainViewModel.SetAmount(GetSender(sender));
-        _mainViewModel.UppdateAll();
-    }
-    private void SetDifficulty(object sender, EventArgs e)
-    {
-        _mainViewModel.SetDifficulty(GetSender(sender));
-        _mainViewModel.UppdateAll();
-    }
-    private void SetCategory(object sender, EventArgs e)
-    {
-        _mainViewModel.SetCategory(GetSender(sender));
-        _mainViewModel.UppdateAll();
-    }
     private void ToggleAmountSelection(object sender, EventArgs e) => _mainViewModel.UI.IsAmountVisible = !_mainViewModel.UI.IsAmountVisible;
     private void ToggleDifficultySelection(object sender, EventArgs e) => _mainViewModel.UI.IsDifficultyVisible = !_mainViewModel.UI.IsDifficultyVisible;
     private void ToggleCategorySelection(object sender, EventArgs e) => _mainViewModel.UI.IsCategoryVisible = !_mainViewModel.UI.IsCategoryVisible;
-
-    private string GetSender(object sender) => ((Button)sender).CommandParameter.ToString();
 
     private async Task AnimateMenu(bool isOpen)
     {     

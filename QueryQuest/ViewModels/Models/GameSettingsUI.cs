@@ -1,12 +1,6 @@
 ﻿using QueryQuest.Application.Interfaces;
+using QueryQuest.Application.Services;
 using QueryQuest.Core.Interfaces;
-using QueryQuest.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ZstdSharp.Unsafe;
 
 namespace QueryQuest.ViewModels.Models
 {
@@ -15,9 +9,9 @@ namespace QueryQuest.ViewModels.Models
         private readonly IGameSettingsService _gameSettings;
         private readonly ITriviaService _triviaService;
 
-        public GameSettingsUI(IGameSettingsService gameSettingsService, ITriviaService triviaService)
+        public GameSettingsUI(ITriviaService triviaService)
         {
-            _gameSettings = gameSettingsService;
+            _gameSettings = GameSettingsService.GetGameSettingsService;
             _amount = _gameSettings.Amount;
             _difficulty = _gameSettings.Difficulty;
             _categoryId = _gameSettings.CategoryId;

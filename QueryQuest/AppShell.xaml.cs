@@ -1,7 +1,4 @@
-﻿using QueryQuest;
-using QueryQuest.Application.Interfaces;
-using QueryQuest.Application.Services;
-using QueryQuest.Views;
+﻿using QueryQuest.Views;
 namespace QueryQuest
 {
     public partial class AppShell : Shell

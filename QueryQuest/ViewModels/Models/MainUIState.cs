@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using QueryQuest.Core.Models;
-
-namespace QueryQuest.ViewModels.Models
+﻿namespace QueryQuest.ViewModels.Models
 {
     public class MainUIState : ObservableObject 
     {

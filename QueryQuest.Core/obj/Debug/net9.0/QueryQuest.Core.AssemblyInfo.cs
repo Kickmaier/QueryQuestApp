@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("QueryQuest.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+22793b4223d7f6fedf9c110706da49637b059545")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a9b7e5bd047e5023b74fb74a1a93a4cc6c0ce06f")]
 [assembly: System.Reflection.AssemblyProductAttribute("QueryQuest.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QueryQuest.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

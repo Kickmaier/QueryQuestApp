@@ -25,7 +25,7 @@
                 </ImageButton>
                 <HorizontalStackLayout Spacing="30" Grid.Column="1" HorizontalOptions="Center">
                     <Label
-                    Text="{Binding _scoreHandeler.CurrentScore, StringFormat='Poäng: {0}'}"
+                    Text="{Binding GameEngine.Score.CurrentScore, StringFormat='Poäng: {0}'}"
                     
                     TextColor="Gold"
                     FontSize="25"
@@ -33,7 +33,7 @@
                     HorizontalOptions="Center"
                     VerticalOptions="Center"/>
                     <Label 
-                    Text="{Binding _scoreHandeler.Streak, StringFormat='Streak: {0}'}"
+                    Text="{Binding GameEngine.Score.Streak, StringFormat='Streak: {0}'}"
                     TextColor="ForestGreen"
                     FontSize="25"
                     HorizontalOptions="Center"

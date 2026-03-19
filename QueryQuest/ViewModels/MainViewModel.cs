@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using QueryQuest.Application.Interfaces;
-using QueryQuest.Core.Interfaces;
-using QueryQuest.Core.Models;
+using QueryQuest.Application.Services;
 using QueryQuest.ViewModels.Models;
 using QueryQuest.Views;
 
@@ -20,19 +10,37 @@ namespace QueryQuest.ViewModels
     {
         private readonly IGameSettingsService _gameSettings;
         public ICommand StartGameCommand { get; }
+        public ICommand ToggleMenuCommand { get; }
+        public ICommand SetAmountCommand { get; }
+        public ICommand SetDifficultyCommand {  get; }
+        public ICommand SetCategoryCommand { get; }
         public MainUIState UI { get; }
-        public MainViewModel(IGameSettingsService gameSettings, MainUIState mainUIState, GameSettingsUI gameSettingsUI)
+        public MainViewModel(MainUIState mainUIState, GameSettingsUI gameSettingsUI)
         {
-            _gameSettings = gameSettings;
+            _gameSettings = GameSettingsService.GetGameSettingsService;
             UI = mainUIState;
             UI.Settings = gameSettingsUI;
             StartGameCommand = new Command(async () => await StartGame());
+            ToggleMenuCommand = new Command(ToggleMenu);
+            SetAmountCommand = new Command<string>((val) =>
+            {
+                UI.Settings.Amount = val;
+                UI.IsAmountVisible = false;
+                UpdateAll();
+            });
+            SetDifficultyCommand = new Command<string>((val) =>
+            {
+                UI.Settings.Difficulty = val;
+                UI.IsDifficultyVisible = false;
+                UpdateAll();
+            });
+            SetCategoryCommand = new Command<string>((val) =>
+            {
+                UI.Settings.CategoryId = val;
+                UI.IsCategoryVisible = false;
+                UpdateAll();
+            });
         }
-
-
-        public string Amount => UI.Settings.Amount;
-        public string Difficulty => UI.Settings.Difficulty;
-        public string CategoryId => UI.Settings.CategoryId;
 
         public string AmountLabelText => $"Längd: {UI.Settings.AmountDisplay}";
         public string DifficultyLabelText => $"Svårighetsgrad: {UI.Settings.DifficultyDisplay}";
@@ -42,14 +50,8 @@ namespace QueryQuest.ViewModels
         public bool IsCategoryError => _gameSettings.GetCategoryIdDisplay(UI.Settings.CategoryId) == null;
         public bool CanStartGame => !IsAmountError && !IsDifficultyError && !IsCategoryError;
 
-        public void SetAmount(string value) { UI.Settings.Amount = value; UI.IsAmountVisible = false; OnPropertyChanged(nameof(AmountLabelText)); }
-        
-        public void SetDifficulty(string value) { UI.Settings.Difficulty = value; UI.IsDifficultyVisible = false; OnPropertyChanged(nameof(DifficultyLabelText)); }
-        
-        public void SetCategory(string value) { UI.Settings.CategoryId = value; UI.IsCategoryVisible = false; OnPropertyChanged(nameof(CategoryLabelText)); }
-
         public void ToggleMenu() => UI.IsMenuVisible = !UI.IsMenuVisible;
-        public void UppdateAll()
+        public void UpdateAll()
         {
             OnPropertyChanged(string.Empty);
         }

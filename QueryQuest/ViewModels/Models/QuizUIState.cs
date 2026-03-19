@@ -1,10 +1,4 @@
-﻿using QueryQuest.Core.Models;
-using QueryQuest.Core.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using QueryQuest.Core.Enums;
 using System.Collections.ObjectModel;
 
 namespace QueryQuest.ViewModels.Models
@@ -15,11 +9,11 @@ namespace QueryQuest.ViewModels.Models
         public ObservableCollection<AnswerOptionUI> Answers { get; } = new();
         public bool IsScoreVisible => _statusHeader == null;
 
-        private bool _quiAreaVisible = true;
+        private bool _quizAreaVisible = true;
         public bool QuizAreaVisible
         {
-            get { return _quiAreaVisible; }
-            set { _quiAreaVisible = value; OnPropertyChanged(); }
+            get { return _quizAreaVisible; }
+            set { _quizAreaVisible = value; OnPropertyChanged(); }
         }
 
         private bool _gameOverVisible = false;

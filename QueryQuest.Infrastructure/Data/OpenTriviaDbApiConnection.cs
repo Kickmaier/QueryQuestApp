@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
-using static QueryQuest.Infrastructure.Data.CategoryStatisticsData;
+﻿using static QueryQuest.Infrastructure.Data.CategoryStatisticsData;
 
 namespace QueryQuest.Infrastructure.Data
 {

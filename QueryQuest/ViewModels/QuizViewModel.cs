@@ -1,51 +1,34 @@
-﻿using Microsoft.Maui.Controls;
-using Microsoft.Maui.Graphics;
-using QueryQuest.Application.Interfaces;
+﻿using QueryQuest.Application.Interfaces;
 using QueryQuest.Core.Interfaces;
 using QueryQuest.Core.Models;
 using QueryQuest.ViewModels.Models;
 using QueryQuest.Views;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using QueryQuest.Core.Enums;
+using QueryQuest.Application.Services;
 
 
 namespace QueryQuest.ViewModels
 {
     public class QuizViewModel : ObservableObject
     {
-        private readonly ITriviaService _questionService;
         private readonly IGameSettingsService _gameSettings;
-        public IScoreHandler _scoreHandeler { get; }
-        public IQuestionService _questionManager { get; }
-        
+        public IGameEngine GameEngine { get; }
         public QuizUIState UI {  get; } 
-
         private IDispatcherTimer _timer;
         private double _totalTime = 100;
         private double _timeLeft;
-        //private string _selectedAnswer;
-        public Question CurrentQuestion => _questionManager.CurrentQuestion;
-        public List<AnswerOption> CurrentAnswers => _questionManager.CurrentQuestion?.AllAnswerOptions;
-
+        public Question CurrentQuestion => GameEngine.CurrentQuestion;
+        public List<AnswerOption> CurrentAnswers => GameEngine.CurrentAnswerOptions;
+        
         public ICommand AnswerSelectedCommand { get; }
         public ICommand PlayAgainCommand { get; }
         public ICommand GoToMainPageCommand { get; }
-        public QuizViewModel (ITriviaService questionService, IGameSettingsService gameSettings, IScoreHandler scoreHandler, IQuestionService questionManager, QuizUIState quizUIState, GameSettingsUI gameSettingsUI)
+        public QuizViewModel (QuizUIState quizUIState, GameSettingsUI gameSettingsUI, IGameEngine gameEngine)
         {
-            _gameSettings = gameSettings;
-            _questionService = questionService;
-            _scoreHandeler = scoreHandler;
-            _questionManager = questionManager;
+            _gameSettings = GameSettingsService.GetGameSettingsService;
+            GameEngine = gameEngine;
             UI = quizUIState;
             _timer = Dispatcher.GetForCurrentThread().CreateTimer();
             _timer.Interval = TimeSpan.FromMilliseconds(100);
@@ -54,28 +37,21 @@ namespace QueryQuest.ViewModels
             AnswerSelectedCommand = new Command<AnswerOptionUI>(OnAnswerSelected);
             PlayAgainCommand = new Command(async () => await ResetGame());
             GoToMainPageCommand = new Command(async () => await Shell.Current.GoToAsync($"//{nameof(MainPage)}"));
-
         }
+        
         public event EventHandler TimeOutOccurred;
         
         public async Task LoadQuestionAsync()
         {
             UI.QuizAreaVisible = true;
             UI.GameOverVisible = false;
+            string amount = _gameSettings.Amount;
+            string difficulty = _gameSettings.Difficulty;
+            string catregoruId = _gameSettings.CategoryId;
             try
             {
-                var getQuestions = await _questionService.GetQuestionAsync(_gameSettings.Amount, _gameSettings.Difficulty, _gameSettings.CategoryId);
-
-                if (getQuestions != null && getQuestions.Count > 0)
-                {
-                    
-                    _questionManager.PrepareQuestion(getQuestions, (int.Parse(_gameSettings.Amount)));
-                    ShowNextQuestion();
-                }
-                else
-                {
-                    throw new Exception("Inga frågor hittades");
-                }
+            await GameEngine.StartGameAsync(amount,difficulty,catregoruId);
+                ShowNextQuestion();
             }
             catch (Exception ex)
             {
@@ -97,18 +73,18 @@ namespace QueryQuest.ViewModels
         {
             try
             {
-                if(_questionManager.HasMoreQuestions)
+                if(GameEngine.HasMoreQuestions)
                 {
-                    _questionManager.SetNextQuestion();
+                    GameEngine.NextQuestion();
                     UI.Answers.Clear();
-                    foreach (var answer in _questionManager.CurrentQuestion.AllAnswerOptions)
+                    foreach (var answer in GameEngine.CurrentAnswerOptions)
                     {
                         UI.Answers.Add(new AnswerOptionUI { Text = answer.Text, Status = AnswerStatus.Unanswered });
                     }
                     OnPropertyChanged(nameof(CurrentQuestion));
                     OnPropertyChanged(nameof(CurrentAnswers));
                     UI.ProgressBarProgress = 0;
-                    UI.QuestionCounterText = _questionManager.GetCurrentText();
+                    UI.QuestionCounterText = GameEngine.GetCurrenProgress();
                     _timeLeft = _totalTime;
                     _timer.Start();
                 }
@@ -152,16 +128,26 @@ namespace QueryQuest.ViewModels
         }
         private async void OnAnswerSelected(AnswerOptionUI selectedOption)
         {
+            await ProsessAnswerAsync(selectedOption);
+        }
+        private async Task ProsessAnswerAsync(AnswerOptionUI selectedOption)
+        {
             if (IsInvalid(selectedOption)) return;
             try
             {
                 PrepareCheck();
-                bool isCorrect = ScoreAndCorrect(selectedOption);
+                bool isCorrect = GameEngine.ProcessAnswer(new AnswerOption { Text = selectedOption.Text });
+                selectedOption.Status = isCorrect ? AnswerStatus.Correct : AnswerStatus.Wrong;
+                if (!isCorrect)
+                {
+                    ShowAnswer(selectedOption);
+                }
+                OnPropertyChanged(nameof(GameEngine));
                 await Task.Delay(1000);
-
+                
                 PrepareForNextQuestion();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 HandleGameOver("Ett fel uppstod", "Spelet var tvunget att avbrytas.");
                 Debug.WriteLine($"Fel i OnAnswerSelected: {ex.Message}");
@@ -173,25 +159,7 @@ namespace QueryQuest.ViewModels
             UI.IsAnswerd = true;
             _timer.Stop();
         }
-        private bool ScoreAndCorrect(AnswerOptionUI selectedOption)
-        {
-            bool isCorrect = _questionManager.CheckAnswer(new AnswerOption { Text = selectedOption.Text });
-            if (isCorrect)
-            {
-                selectedOption.Status = AnswerStatus.Correct;
-                _scoreHandeler.AddCorrectAnswer();
-            }
-            else
-            {
-                _scoreHandeler.HandleWrongAnswer();
-                selectedOption.Status = AnswerStatus.Wrong;
-                ShowAnswer(selectedOption);
-            }
-            OnPropertyChanged(nameof(CurrentQuestion));
-            OnPropertyChanged(nameof(CurrentAnswers));
-            OnPropertyChanged(nameof(_scoreHandeler));
-            return isCorrect;
-        }
+
         private void PrepareForNextQuestion()
         {
             UI.IsAnswerd = false;
@@ -200,13 +168,13 @@ namespace QueryQuest.ViewModels
         private void ShowAnswer(AnswerOptionUI? selectedOption)
         {
             var correct = UI.Answers
-                    .FirstOrDefault(a => a.Text == _questionManager.CurrentCorrectAnswer);
+                    .FirstOrDefault(a => a.Text == GameEngine.CurrentCorrectAnswer);
             if (correct != null) correct.Status = AnswerStatus.Correct;
-
         }
         private async void HandleTimeOut()
         {
             TimeOutOccurred?.Invoke(this, EventArgs.Empty);
+            UI.IsAnswerd = true;
             ShowAnswer(null);
             await Task.Delay(1000);
             PrepareForNextQuestion();
@@ -219,10 +187,10 @@ namespace QueryQuest.ViewModels
             if (header == null)
             {
                 UI.StatusBody =
-                    $"Antal rätt: {_scoreHandeler.CorrectAnswerCount} / {_gameSettings.Amount}" +
-                    $"\nHögsta Streak: {_scoreHandeler.HighestStreakCount} / {_gameSettings.Amount}";
+                    $"Antal rätt: {GameEngine.Score.CorrectAnswerCount} / {_gameSettings.Amount}" +
+                    $"\nHögsta Streak: {GameEngine.Score.HighestStreakCount} / {_gameSettings.Amount}";
                 UI.StatusScore =
-                    $"Slutresultat: {_scoreHandeler.CurrentScore}";
+                    $"Slutresultat: {GameEngine.Score.CurrentScore}";
             }
             else
             {
@@ -236,11 +204,9 @@ namespace QueryQuest.ViewModels
         public void CleanUp()
         { 
             _timer.Stop();
-            _scoreHandeler.Reset();
-            _questionManager.Reset();
+            GameEngine.ResetGame();
             UI.Reset();
-            OnPropertyChanged(nameof(_scoreHandeler));
-         
+            OnPropertyChanged(nameof(GameEngine)); 
         }
     }
 }

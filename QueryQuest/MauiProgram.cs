@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using QueryQuest.Application.Services;
 using QueryQuest.ViewModels;
 using QueryQuest.Core.Interfaces;
@@ -27,15 +26,16 @@ namespace QueryQuest
                 });
             //builder.Configuration.AddUserSecrets<MainPage>();
             builder.Services.AddSingleton<OpenTriviaDbApiConnection>();
-            builder.Services.AddSingleton<IGameSettingsService, GameSettingsService>();
+            //builder.Services.AddSingleton<IGameSettingsService, GameSettingsService>();
             builder.Services.AddSingleton<ITriviaService, OpenTriviaService>();
             builder.Services.AddSingleton<IHtmlService, HtmlService>();
-            builder.Services.AddSingleton<IScoreHandler, ScoreHandler>();
+            builder.Services.AddTransient<IScoreHandler, ScoreHandler>();
             builder.Services.AddSingleton<BaseApiClient>();
             builder.Services.AddSingleton<HttpClient>();
+            builder.Services.AddTransient<IGameEngine, GameEngine>();
             builder.Services.AddTransient<IQuestionService, QuestionManager>();
             builder.Services.AddTransient<GameSettingsUI>();
-            builder.Services.AddTransient<ScoreHandler>();
+            //builder.Services.AddTransient<ScoreHandler>();
             builder.Services.AddTransient<QuizUIState>();
             builder.Services.AddTransient<MainUIState>();
             builder.Services.AddTransient<MainViewModel>();

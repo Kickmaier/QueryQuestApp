@@ -75,7 +75,7 @@
     </ScrollView>
         <ImageButton 
             Source="burgermenu.png" 
-            Clicked="OnToggleMenu"
+            Command="{Binding ToggleMenuCommand}"
             BackgroundColor="Transparent"
             HeightRequest="30"
             WidthRequest="30"
@@ -89,7 +89,7 @@
          Opacity="0" 
          InputTransparent="True">
             <BoxView.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnToggleMenu" />
+                <TapGestureRecognizer Command="{Binding ToggleMenuCommand}" />
             </BoxView.GestureRecognizers>
         </BoxView>
 
@@ -112,38 +112,37 @@
 
                     <Button Text="Kategori ∇" Clicked="ToggleCategorySelection" CornerRadius="15" Margin="0,10,0,0"/>
                     <VerticalStackLayout x:Name="CategorySelection" IsVisible="{Binding UI.IsCategoryVisible}" Margin="10" Spacing="5">
-                        <Button Text="Blandat" Clicked="SetCategory" CommandParameter="" CornerRadius="15">
+                        <Button Text="Blandat" Command="{Binding SetCategoryCommand}" CommandParameter="" CornerRadius="15">
                             <Button.Triggers>
-                                <DataTrigger TargetType="Button" Binding="{Binding CategoryId}" Value="">
+                                <DataTrigger TargetType="Button" Binding="{Binding UI.Settings.CategoryId}" Value="">
                                     <Setter Property="BackgroundColor" Value="Green"/>
                                 </DataTrigger>
                             </Button.Triggers>
                         </Button>
-                        <Button Text="Allmänbildning" Clicked="SetCategory" CommandParameter="9" CornerRadius="15">
+                        <Button Text="Allmänbildning" Command="{Binding SetCategoryCommand}" CommandParameter="9" CornerRadius="15">
                         <Button.Triggers>
-                            <DataTrigger TargetType="Button" Binding="{Binding CategoryId}" Value="9">
+                                <DataTrigger TargetType="Button" Binding="{Binding UI.Settings.CategoryId}" Value="9">
                                 <Setter Property="BackgroundColor" Value="Green"/>
                             </DataTrigger>
                         </Button.Triggers>
                             </Button>
-
-                        <Button Text="Musik" Clicked="SetCategory" CommandParameter="12" CornerRadius="15">
+                        <Button Text="Musik" Command="{Binding SetCategoryCommand}" CommandParameter="12" CornerRadius="15">
                         <Button.Triggers>
-                            <DataTrigger TargetType="Button" Binding="{Binding CategoryId}" Value="12">
+                                <DataTrigger TargetType="Button" Binding="{Binding UI.Settings.CategoryId}" Value="12">
                                 <Setter Property="BackgroundColor" Value="Green"/>
                             </DataTrigger>
                         </Button.Triggers>
                         </Button>
-                        <Button Text="Historia" Clicked="SetCategory" CommandParameter="23" CornerRadius="15">
+                        <Button Text="Historia" Command="{Binding SetCategoryCommand}" CommandParameter="23" CornerRadius="15">
                         <Button.Triggers>
-                            <DataTrigger TargetType="Button" Binding="{Binding CategoryId}" Value="23">
+                                <DataTrigger TargetType="Button" Binding="{Binding UI.Settings.CategoryId}" Value="23">
                                 <Setter Property="BackgroundColor" Value="Green"/>
                             </DataTrigger>
                         </Button.Triggers>
                         </Button>
-                        <Button Text="Djur" Clicked="SetCategory" CommandParameter="27" CornerRadius="15">
+                        <Button Text="Djur" Command="{Binding SetCategoryCommand}" CommandParameter="27" CornerRadius="15">
                         <Button.Triggers>
-                            <DataTrigger TargetType="Button" Binding="{Binding CategoryId}" Value="27">
+                                <DataTrigger TargetType="Button" Binding="{Binding UI.Settings.CategoryId}" Value="27">
                                 <Setter Property="BackgroundColor" Value="Green"/>
                             </DataTrigger>
                         </Button.Triggers>
@@ -152,23 +151,23 @@
 
                     <Button Text="Längd ∇" Clicked="ToggleAmountSelection" CornerRadius="15" Margin="0,10,0,0"/>
                     <VerticalStackLayout x:Name="AmountSelection" IsVisible="{Binding UI.IsAmountVisible}" Margin="10,0,10,10" Spacing="2">
-                        <Button Text="10" Clicked="SetAmount" CommandParameter="10" HeightRequest="40">
+                        <Button Text="10" Command="{Binding SetAmountCommand}" CommandParameter="10" HeightRequest="40">
                             <Button.Triggers>
-                                <DataTrigger TargetType="Button" Binding="{Binding Amount}" Value="10">
+                                <DataTrigger TargetType="Button" Binding="{Binding UI.Settings.Amount}" Value="10">
                                     <Setter Property="BackgroundColor" Value="Green"/>
                                 </DataTrigger>
                             </Button.Triggers>
                         </Button>
-                        <Button Text="20" Clicked="SetAmount" CommandParameter="20" HeightRequest="40">
+                        <Button Text="20" Command="{Binding SetAmountCommand}" CommandParameter="20" HeightRequest="40">
                             <Button.Triggers>
-                                <DataTrigger TargetType="Button" Binding="{Binding Amount}" Value="20">
+                                <DataTrigger TargetType="Button" Binding="{Binding UI.Settings.Amount}" Value="20">
                                     <Setter Property="BackgroundColor" Value="Green"/>
                                 </DataTrigger>
                             </Button.Triggers>
                         </Button>
-                        <Button Text="30" Clicked="SetAmount" CommandParameter="30" HeightRequest="40">
+                        <Button Text="30" Command="{Binding SetAmountCommand}" CommandParameter="30" HeightRequest="40">
                             <Button.Triggers>
-                                <DataTrigger TargetType="Button" Binding="{Binding Amount}" Value="30">
+                                <DataTrigger TargetType="Button" Binding="{Binding UI.Settings.Amount}" Value="30">
                                     <Setter Property="BackgroundColor" Value="Green"/>
                                 </DataTrigger>
                             </Button.Triggers>
@@ -177,30 +176,30 @@
 
                     <Button Text="Svårighetsgrad ∇" Clicked="ToggleDifficultySelection" CornerRadius="15" Margin="0,10,0,0"/>
                     <VerticalStackLayout x:Name="DifficultySelection" IsVisible="{Binding UI.IsDifficultyVisible}" Margin="10,0,10,10" Spacing="2">
-                        <Button Text="Blandat" Clicked="SetDifficulty" BackgroundColor="#34495e" CommandParameter="" CornerRadius="15">
+                        <Button Text="Blandat" Command="{Binding SetDifficultyCommand}" BackgroundColor="#34495e" CommandParameter="" CornerRadius="15">
                         <Button.Triggers>
-                            <DataTrigger TargetType="Button" Binding="{Binding Difficulty}" Value="">
+                            <DataTrigger TargetType="Button" Binding="{Binding UI.Settings.Difficulty}" Value="">
                                 <Setter Property="BackgroundColor" Value="Green"/>
                             </DataTrigger>
                         </Button.Triggers>
                         </Button>
-                        <Button Text="Lätt" IsEnabled="{Binding UI.Settings.CanSelectEasy}" Clicked="SetDifficulty" CommandParameter="easy" CornerRadius="15">
+                        <Button Text="Lätt" IsEnabled="{Binding UI.Settings.CanSelectEasy}" Command="{Binding SetDifficultyCommand}" CommandParameter="easy" CornerRadius="15">
                             <Button.Triggers>
-                                <DataTrigger TargetType="Button" Binding="{Binding Difficulty}" Value="easy">
+                                <DataTrigger TargetType="Button" Binding="{Binding UI.Settings.Difficulty}" Value="easy">
                                     <Setter Property="BackgroundColor" Value="Green"/>
                                 </DataTrigger>
                             </Button.Triggers>
                         </Button>
-                        <Button Text="Medel" IsEnabled="{Binding UI.Settings.CanSelectMedium}" Clicked="SetDifficulty" CommandParameter="medium" CornerRadius="15">
+                        <Button Text="Medel" IsEnabled="{Binding UI.Settings.CanSelectMedium}" Command="{Binding SetDifficultyCommand}" CommandParameter="medium" CornerRadius="15">
                             <Button.Triggers>
-                                <DataTrigger TargetType="Button" Binding="{Binding Difficulty}" Value="medium">
+                                <DataTrigger TargetType="Button" Binding="{Binding UI.Settings.Difficulty}" Value="medium">
                                     <Setter Property="BackgroundColor" Value="Green"/>
                                 </DataTrigger>
                             </Button.Triggers>
                         </Button>
-                        <Button Text="Svårt" IsEnabled="{Binding UI.Settings.CanSelectHard} " Clicked="SetDifficulty" CommandParameter="hard" CornerRadius="15">
+                        <Button Text="Svårt" IsEnabled="{Binding UI.Settings.CanSelectHard}" Command="{Binding SetDifficultyCommand}" CommandParameter="hard" CornerRadius="15">
                             <Button.Triggers>
-                                <DataTrigger TargetType="Button" Binding="{Binding Difficulty}" Value="hard">
+                                <DataTrigger TargetType="Button" Binding="{Binding UI.Settings.Difficulty}" Value="hard">
                                     <Setter Property="BackgroundColor" Value="Green"/>
                                 </DataTrigger>
                             </Button.Triggers>
@@ -208,7 +207,7 @@
                     </VerticalStackLayout>
 
                     <Button Text="STÄNG" 
-                        Clicked="OnToggleMenu" 
+                        Command="{Binding ToggleMenuCommand}" 
                         Margin="0,10"
                         BackgroundColor="#2a3a5c" />
                 </VerticalStackLayout>

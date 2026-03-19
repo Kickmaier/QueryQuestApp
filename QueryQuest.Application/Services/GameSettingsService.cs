@@ -1,11 +1,17 @@
-﻿
+﻿using QueryQuest.Application.Interfaces;
 
-using QueryQuest.Application.Interfaces;
 
 namespace QueryQuest.Application.Services
 {
     public class GameSettingsService : IGameSettingsService
     {
+        private static readonly GameSettingsService _instance = new GameSettingsService();
+        public static IGameSettingsService GetGameSettingsService => _instance;
+        private GameSettingsService() 
+        {
+        
+        }
+
         private string _amount = "10";
         public string Amount
         {

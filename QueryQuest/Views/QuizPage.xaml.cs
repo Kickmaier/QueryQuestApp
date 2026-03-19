@@ -1,10 +1,4 @@
 using QueryQuest.ViewModels;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace QueryQuest.Views;
 

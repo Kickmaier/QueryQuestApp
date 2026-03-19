@@ -1,12 +1,6 @@
 ﻿using QueryQuest.Core.Interfaces;
 using QueryQuest.Core.Models;
 using QueryQuest.Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static QueryQuest.Infrastructure.Data.CategoryStatisticsData;
 
 namespace QueryQuest.Infrastructure.Repositories
 {
